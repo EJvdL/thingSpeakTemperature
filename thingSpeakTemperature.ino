@@ -30,7 +30,7 @@
 */
 
 #include "ThingSpeak.h"
-#include "secrets.h"
+#include "MySecrets.h"
 
 unsigned long myChannelNumber = SECRET_CH_ID;
 const char * myWriteAPIKey = SECRET_WRITE_APIKEY;
