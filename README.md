@@ -1,5 +1,7 @@
 # thingSpeakTemperature
 Explore interface between Dallas DS18B20 sensor and thingSpeak platform
+Based on example described in https://github.com/nothans/thingspeak-esp-examples/tree/master
+and corresponding tutorial: http://nothans.com/measure-wi-fi-signal-levels-with-the-esp8266-and-thingspeak
 
 ## DS18B20
 Minimal code snippet
