@@ -39,3 +39,6 @@ void loop(void)
   delay(2000); 
 } 
 ```
+## Wemos D1 pin usage
+Not all pins of the Wemos D1 can be used for peripherals. See this link for more information:<br>
+https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/
