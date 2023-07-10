@@ -33,7 +33,6 @@ void loop(void)
     Serial.print("Sensor "); Serial.print(i + 1); Serial.print(" : ");
     double tempC = sensors.getTempCByIndex(i);
     Serial.print(tempC); 
-    Serial.print((char)176);  //shows degrees character
     Serial.print("C");
   }
   delay(2000); 
