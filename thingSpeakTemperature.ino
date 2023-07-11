@@ -33,7 +33,14 @@
  
 */
 
-//#define DEBUG
+#define DEBUG
+
+/*
+ *  OTA includes
+ */
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 
 /* 
  *  ThingSpeak includes 
@@ -58,7 +65,8 @@
  * Wifi variables and constants
  * -----
  */
-#define THINGSPEAK_DELAY (20000)
+ // make a reading every 15 minutes, 7.5 minutes between each channel
+#define THINGSPEAK_DELAY (450000)
 unsigned long int mvPreviousTime  = 0;
 unsigned long int mvCurrentTime   = 0;
 
@@ -247,13 +255,34 @@ void setup() {
 
   bool lvResult = WiFi.config(ip, dns, gateway, subnet);
  
-  #ifdef DEBUG
+   #ifdef DEBUG
     if (!lvResult) {
       Serial.println("STA Failed to configure");
     }
     monitorWiFi();
   #endif  
+
+  wifiReconnect();
   
+   /* 
+    * Configure  OTA server plus events 
+    */
+  ArduinoOTA.setHostname("TempSensor");
+
+  ArduinoOTA.onStart([]() {
+  });
+
+  ArduinoOTA.onEnd([]() {
+  });
+
+  ArduinoOTA.onError([](ota_error_t error) {
+    (void)error;
+    ESP.restart();
+  });
+
+  /* setup the OTA server */
+  ArduinoOTA.begin();
+
   /* -----
    * Start a client to connect to the ThingSpeak framework
    * Sensor data is going to be logged to ThingSpeak channels
@@ -271,8 +300,6 @@ void setup() {
   #ifdef DEBUG
     Serial.println("HTTP server started");  
   #endif
-
-
 
   /* -----
    * Start the communication to the Dallas temperature sensors. 
@@ -334,6 +361,8 @@ void loop() {
     mvCurrentTime = millis();
     while (mvCurrentTime - mvPreviousTime < THINGSPEAK_DELAY) {
       mvServer.handleClient();    // handle local webclient requests
+      ArduinoOTA.handle();        // handle possible OTA requests
+
       mvCurrentTime = millis();
       yield();                    // the loop may not be blocking so give-up control to the ESP tasks
     }
